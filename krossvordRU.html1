@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новогодний кроссворд 🎄</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #0a3d1e 0%, #1a5c37 50%, #2d7a4d 100%);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Снежинки */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(circle, white 1px, transparent 1px),
+        radial-gradient(circle, white 1px, transparent 1px),
+        radial-gradient(circle, white 1px, transparent 1px);
+      background-size: 50px 50px, 70px 70px, 90px 90px;
+      background-position: 10px 10px, 30px 20px, 50px 40px;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin: 20px 0;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.4);
+      color: gold;
+    }
+
+    .grid-container {
+      display: inline-block;
+      background: #222;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      margin: 20px auto;
+    }
+
+    .crossword-grid {
+      display: grid;
+      grid-template-columns: repeat(15, 40px);
+      grid-template-rows: repeat(15, 40px);
+      gap: 1px;
+      background: #333;
+      border: 3px solid #c1272d;
+    }
+
+    .cell {
+      width: 40px;
+      height: 40px;
+      background: #f9f3e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #222;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cell.black {
+      background: #111;
+      cursor: default;
+    }
+
+    .cell input {
+      width: 90%;
+      height: 90%;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: none;
+      background: transparent;
+      color: #222;
+      outline: none;
+      text-transform: uppercase;
+    }
+
+    .cell .number {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 0.6rem;
+      color: #c1272d;
+      font-weight: bold;
+    }
+
+    .hints {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .hints h2 {
+      color: gold;
+      margin-top: 0;
+    }
+
+    .hints ul {
+      columns: 2;
+      column-gap: 40px;
+      padding-left: 20px;
+    }
+
+    .hints li {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .controls {
+      margin: 20px 0;
+    }
+
+    button {
+      background: #c1272d;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    button:hover {
+      background: #e03a3e;
+      transform: scale(1.05);
+    }
+
+    .correct { background-color: #d4edda !important; color: #155724 !important; }
+    .incorrect { background-color: #f8d7da !important; color: #721c24 !important; }
+
+    @media (max-width: 768px) {
+      .crossword-grid {
+        grid-template-columns: repeat(15, 28px);
+        grid-template-rows: repeat(15, 28px);
+      }
+      .cell input { font-size: 1rem; }
+      .cell .number { font-size: 0.5rem; }
+      .hints ul { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Новогодний кроссворд 🎄</h1>
+
+    <div class="grid-container">
+      <div class="crossword-grid" id="grid"></div>
+    </div>
+
+    <div class="controls">
+      <button id="checkBtn">Проверить</button>
+    </div>
+
+    <div class="hints">
+      <h2>Подсказки:</h2>
+      <ul>
+        <li><b>1. По горизонтали:</b> Украшение, которое ставят в гостиной в декабре → <i>ЁЛКА</i></li>
+        <li><b>2. По вертикали:</b> Главный волшебник Нового года → <i>ДЕДМОРОЗ</i></li>
+        <li><b>3. По горизонтали:</b> Друг из снега с морковным носом → <i>СНЕГОВИК</i></li>
+        <li><b>4. По вертикали:</b> Яркая бумажная «пальба» на празднике → <i>ХЛОПУШКА</i></li>
+        <li><b>5. По горизонтали:</b> Цитрусовый символ Нового года → <i>МАНДАРИН</i></li>
+        <li><b>6. По вертикали:</b> Праздничный салат с колбасой и овощами → <i>ОЛИВЬЕ</i></li>
+        <li><b>7. По горизонтали:</b> «Винегрет» для праздничного стола → <i>САЛАТ</i></li>
+        <li><b>8. По горизонтали:</b> Ночное цветочное шоу на небе → <i>ФЕЙЕРВЕРК</i></li>
+        <li><b>9. По вертикали:</b> То, что ждёшь под ёлкой → <i>ПОДАРОК</i></li>
+        <li><b>10. По горизонтали:</b> Звон в полночь 31 декабря → <i>БОЙКУРАНТ</i></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Слова и их позиции (row, col, direction: 'h'/'v', word, number)
+    const words = [
+      { r: 1, c: 4, dir: 'h', word: "ЁЛКА", num: 1 },
+      { r: 0, c: 5, dir: 'v', word: "ДЕДМОРОЗ", num: 2 },
+      { r: 4, c: 1, dir: 'h', word: "СНЕГОВИК", num: 3 },
+      { r: 1, c: 9, dir: 'v', word: "ХЛОПУШКА", num: 4 },
+      { r: 7, c: 2, dir: 'h', word: "МАНДАРИН", num: 5 },
+      { r: 3, c: 12, dir: 'v', word: "ОЛИВЬЕ", num: 6 },
+      { r: 10, c: 5, dir: 'h', word: "САЛАТ", num: 7 },
+      { r: 12, c: 0, dir: 'h', word: "ФЕЙЕРВЕРК", num: 8 },
+      { r: 5, c: 7, dir: 'v', word: "ПОДАРОК", num: 9 },
+      { r: 14, c: 1, dir: 'h', word: "БОЙКУРАНТ", num: 10 }
+    ];
+
+    const SIZE = 15;
+    let grid = Array(SIZE).fill().map(() => Array(SIZE).fill(null)); // null = пустая, '#' = чёрная, буква = занята
+    let cellElements = Array(SIZE).fill().map(() => Array(SIZE).fill(null));
+    let numberMap = {};
+
+    // Инициализация сетки: сначала чёрные клетки по контуру и для изоляции
+    function initGrid() {
+      // Чёрные по периметру и в «пустых» зонах
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          grid[r][c] = '#'; // временно все чёрные
+        }
+      }
+
+      // Размещаем слова и открываем нужные клетки
+      words.forEach(({ r, c, dir, word }) => {
+        for (let i = 0; i < word.length; i++) {
+          let rr = r + (dir === 'v' ? i : 0);
+          let cc = c + (dir === 'h' ? i : 0);
+          if (rr < SIZE && cc < SIZE) {
+            grid[rr][cc] = ''; // делаем клетку активной
+          }
+        }
+      });
+
+      // «Зачерняем» изолированные пустые клетки (не занятые и не рядом со словами)
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (grid[r][c] === '') continue;
+          // Если клетка не занята и соседей-букв нет — чёрная
+          let hasNeighbor = false;
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              if (dr === 0 && dc === 0) continue;
+              let nr = r + dr, nc = c + dc;
+              if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && grid[nr][nc] === '') {
+                hasNeighbor = true;
+                break;
+              }
+            }
+            if (hasNeighbor) break;
+          }
+          if (!hasNeighbor) grid[r][c] = '#';
+        }
+      }
+
+      // Сохраняем номера
+      words.forEach(({ r, c, num }) => {
+        numberMap[`${r},${c}`] = num;
+      });
+    }
+
+    function renderGrid() {
+      const gridEl = document.getElementById('grid');
+      gridEl.innerHTML = '';
+
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          const key = `${r},${c}`;
+
+          if (grid[r][c] === '#') {
+            cell.classList.add('black');
+          } else {
+            const input = document.createElement('input');
+            input.maxLength = 1;
+            input.dataset.row = r;
+            input.dataset.col = c;
+            input.addEventListener('input', handleInput);
+            input.addEventListener('click', () => setActiveCell(r, c));
+            cell.appendChild(input);
+
+            if (numberMap[key]) {
+              const numSpan = document.createElement('span');
+              numSpan.className = 'number';
+              numSpan.textContent = numberMap[key];
+              cell.appendChild(numSpan);
+            }
+          }
+
+          cellElements[r][c] = cell;
+          gridEl.appendChild(cell);
+        }
+      }
+    }
+
+    let activeRow = -1, activeCol = -1, activeDir = 'h';
+
+    function setActiveCell(r, c) {
+      if (grid[r][c] === '#') return;
+      activeRow = r;
+      activeCol = c;
+
+      // Определяем направление по соседним клеткам
+      if (c + 1 < SIZE && grid[r][c + 1] !== '#') activeDir = 'h';
+      else if (r + 1 < SIZE && grid[r + 1][c] !== '#') activeDir = 'v';
+      else if (c - 1 >= 0 && grid[r][c - 1] !== '#') activeDir = 'h';
+      else if (r - 1 >= 0 && grid[r - 1][c] !== '#') activeDir = 'v';
+    }
+
+    function handleInput(e) {
+      const input = e.target;
+      let r = parseInt(input.dataset.row);
+      let c = parseInt(input.dataset.col);
+      let ch = input.value.toUpperCase().replace(/[^А-ЯЁ]/g, '');
+      input.value = ch;
+
+      if (ch && activeRow === r && activeCol === c) {
+        // Переход к следующей клетке в активном направлении
+        if (activeDir === 'h') c++;
+        else r++;
+        if (r < SIZE && c < SIZE && grid[r][c] !== '#') {
+          const nextInput = cellElements[r][c].querySelector('input');
+          if (nextInput) {
+            nextInput.focus();
+            activeRow = r;
+            activeCol = c;
+          }
+        }
+      }
+    }
+
+    function checkAnswers() {
+      // Сброс подсветки
+      document.querySelectorAll('.cell input').forEach(el => {
+        el.parentElement.classList.remove('correct', 'incorrect');
+      });
+
+      let allCorrect = true;
+
+      words.forEach(({ r, c, dir, word }) => {
+        for (let i = 0; i < word.length; i++) {
+          const rr = r + (dir === 'v' ? i : 0);
+          const cc = c + (dir === 'h' ? i : 0);
+          const input = cellElements[rr][cc].querySelector('input');
+          const userChar = (input.value || '').toUpperCase();
+          const correctChar = word[i];
+
+          if (userChar === correctChar) {
+            input.parentElement.classList.add('correct');
+          } else {
+            input.parentElement.classList.add('incorrect');
+            allCorrect = false;
+          }
+        }
+      });
+
+      if (allCorrect) {
+        setTimeout(() => alert('🎉 Поздравляем! Кроссворд решён! С Новым годом! 🎅'), 300);
+      }
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+      initGrid();
+      renderGrid();
+      document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    });
+  </script>
+</body>
+</html>
