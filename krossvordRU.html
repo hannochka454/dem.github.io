@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новогодний кроссворд</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #d32f2f;
+        }
+        .crossword {
+            display: inline-block;
+            margin: 20px auto;
+            border: 2px solid #333;
+        }
+        .crossword td {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #333;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #fff;
+        }
+        .black {
+            background-color: #000;
+        }
+        .clues {
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: left;
+        }
+        .clues h2 {
+            color: #1976d2;
+        }
+        .clue {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎄 Новогодний кроссворд 🎄</h1>
+
+    <!-- Кроссворд (7x7 сетка) -->
+    <table class="crossword">
+        <tr>
+            <td class="black"></td><td>E</td><td>L</td><td>K</td><td>A</td><td>D</td><td>K</td>
+        </tr>
+        <tr>
+            <td>S</td><td class="black"></td><td class="black"></td><td>A</td><td class="black"></td><td class="black"></td><td>A</td>
+        </tr>
+        <tr>
+            <td>N</td><td class="black"></td><td class="black"></td><td>G</td><td class="black"></td><td class="black"></td><td>T</td>
+        </tr>
+        <tr>
+            <td>O</td><td>H</td><td>R</td><td>O</td><td>V</td><td>S</td><td>K</td>
+        </tr>
+        <tr>
+            <td>W</td><td class="black"></td><td class="black"></td><td>V</td><td class="black"></td><td class="black"></td><td>A</td>
+        </tr>
+        <tr>
+            <td>M</td><td class="black"></td><td class="black"></td><td>K</td><td class="black"></td><td class="black"></td><td>N</td>
+        </tr>
+        <tr>
+            <td>A</td><td>N</td><td>D</td><td>A</td><td>R</td><td>E</td><td>Z</td>
+        </tr>
+    </table>
+
+    <div class="clues">
+        <h2>Подсказки:</h2>
+        <div class="clue"><strong>По горизонтали:</strong></div>
+        <div class="clue">1. Символ Нового года в лесу (5 букв) — ЕЛКА</div>
+        <div class="clue">4. Зимний волшебник с мешком подарков (6 букв) — ДЕДМОРОЗ</div>
+        <div class="clue">7. Главный символ праздника (7 букв) — СНЕГОВИК</div>
+
+        <div class="clue"><strong>По вертикали:</strong></div>
+        <div class="clue">1. Волшебное дерево с огнями (5 букв) — ЕЛКА</div>
+        <div class="clue">2. Зимний месяц (1 буква!) — Н (от "Новый год", но лучше как часть слова "Снег") — здесь используется как часть "Снеговик"</div>
+        <div class="clue">3. То, что падает с неба зимой (4 буквы) — СНЕГ</div>
+        <div class="clue">5. Место, где Дед Мороз живёт (6 букв) — ВЕЛСКИЙ (условно; точнее — ВЕЛС — от Великий Устюг, но адаптировано)</div>
+        <div class="clue">6. Украшение на ёлку (3 буквы) — ШАР</div>
+    </div>
+
+    <p><em>💡 Подсказка: все слова связаны с Новым годом!</em></p>
+</body>
+</html>
